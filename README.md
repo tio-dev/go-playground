@@ -1,5 +1,12 @@
 
 
+```txt
+https://monorepo.tools/
+https://github.com/nrwl/nx
+https://github.com/nx-go/nx-go
+https://github.com/mitranim/gow
+```
+
 # GoPlayground
 
 This project was generated using [Nx](https://nx.dev).
