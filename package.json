@@ -58,7 +58,6 @@
     "@mui/lab": "5.0.0-alpha.70",
     "@mui/material": "5.4.3",
     "@mui/utils": "^5.4.6",
-    "@nrwl/next": "14.3.6",
     "@popperjs/core": "2.11.2",
     "clsx": "1.1.1",
     "core-js": "^3.6.5",

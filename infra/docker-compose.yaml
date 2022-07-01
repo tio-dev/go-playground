@@ -1,0 +1,78 @@
+version: "3.8"
+
+volumes:
+  web3_postgres_data:
+  web3_nats_data:
+  web3_redis_data:
+  web3_ipfs_data:
+  web3_minio_data:
+
+
+services:
+
+  postgres:
+    image: postgis/postgis:13-3.1-alpine
+    command: postgres
+    restart: always
+    env_file:
+      - .postgres.env
+    ports:
+      - "5438:5432"
+    volumes:
+      - web3_postgres_data:/var/lib/postgresql/data
+      - .docker/init/postgres/init_db/1_init_db.sh:/docker-entrypoint-initdb.d/1_init_db.sh
+
+  nats:
+    image: nats
+    ports:
+    - "4333:4222"
+    - "6333:6222"
+    - "8333:8222"
+    - "9333:8080"
+    volumes:
+    - "web3_nats_data:/data"
+    - .docker/config/nats/nats-server.conf:/nats-server.conf
+
+
+  redis:
+    image: redislabs/redismod
+    restart: always
+    ports:
+      - "6378:6379"
+    volumes:
+      - web3_redis_data:/data
+
+  ipfs:
+    image: ghcr.io/linuxserver/ipfs
+    env_file:
+      - .ipfs.env
+    volumes:
+      - web3_ipfs_data:/config
+    ports:
+      - "8280:80"
+      - "4201:4001"
+      - "5201:5001"
+      - "8288:8080"
+      - "8243:443" #optional
+    restart: unless-stopped
+
+  minio:
+    image: minio/minio
+    command: server --console-address ":9006" /data
+    env_file:
+      - .minio.env
+    ports:
+      - "9007:9000"
+      - "9006:9006"
+    restart: always
+    volumes:
+      - web3_minio_data:/data
+
+  minioconsole:
+    image: minio/console
+    command: server /data
+    env_file:
+      - .minioconsole.env
+    ports:
+      - "9008:9090"
+
